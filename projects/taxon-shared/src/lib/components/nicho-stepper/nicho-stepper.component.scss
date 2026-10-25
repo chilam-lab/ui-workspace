@@ -1,3 +1,5 @@
+@import 'bootstrap-subset';
+
 :host {
   --nicho-primary: #0b1c30;
   --nicho-secondary: #006c49;
@@ -5,6 +7,8 @@
   --nicho-on-secondary-container: #00714d;
   --nicho-outline-variant: #c6c6cd;
   --nicho-on-surface-variant: #45464d;
+  display: block;
+  width: 100%;
   font-family: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -97,4 +101,39 @@
 .nicho-stepper__check {
   line-height: 1;
   font-size: 1rem;
+}
+
+/* ========== RESPONSIVE (Bootstrap-style breakpoints) ========== */
+@media (max-width: 768px) {
+  .nicho-stepper {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+
+  .nicho-stepper__connector {
+    width: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .nicho-stepper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .nicho-stepper__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nicho-stepper__connector {
+    width: 2px;
+    height: 1.25rem;
+    margin: 0.15rem 0 0.15rem 1rem;
+  }
+
+  .nicho-stepper__label {
+    white-space: normal;
+  }
 }

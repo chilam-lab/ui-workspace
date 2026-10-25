@@ -1,3 +1,5 @@
+@import 'bootstrap-subset';
+
 :host {
   display: block;
   width: 100%;
@@ -35,6 +37,7 @@
   width: 140px;
   font-size: 12px;
 }
+.legend { max-width: calc(100% - 24px); }
 .legend-title { font-weight: 600; margin-bottom: 8px; color: #333; }
 .legend-scale { display: flex; flex-direction: column; gap: 4px; }
 .legend-item { display: grid; grid-template-columns: 18px 1fr; align-items: center; gap: 8px; line-height: 1.1; color: #333; font-size: 11px; }
@@ -64,3 +67,14 @@
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .msg { font-size: 14px; color: #111827; }
+
+/* ========== RESPONSIVE (Bootstrap-style breakpoints) ========== */
+@media (max-width: 576px) {
+  .legend {
+    top: 8px;
+    left: 8px;
+    transform: none;
+    width: auto;
+    max-width: calc(100% - 16px);
+  }
+}

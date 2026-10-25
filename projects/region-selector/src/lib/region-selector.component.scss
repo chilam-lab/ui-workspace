@@ -1,28 +1,14 @@
+@import 'bootstrap-subset';
+
+/* Layout en columnas responsivas vía Bootstrap (.row / .col-*).
+   En móvil (col-12) se apilan; desde md (col-md-4) van en una fila. */
 .selector-container {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 200px;
-
-  label {
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    font-size: 0.95rem;
-    color: #333;
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  select {
-    padding: 0.5rem;
-    font-size: 1rem;
-    font-family: 'Montserrat', sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: white;
-  }
+.field label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
 }

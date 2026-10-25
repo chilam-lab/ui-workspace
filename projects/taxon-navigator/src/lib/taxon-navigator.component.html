@@ -4,14 +4,14 @@
 </div>
 
 <!-- Layout 2 columnas: izquierda navegación, derecha seleccionados -->
-<div class="navigator-grid" *ngIf="currentChildLevel || activeParentInfo">
+<div class="navigator-grid row g-3" *ngIf="currentChildLevel || activeParentInfo">
 
   <!-- Columna izquierda: navegador -->
-  <div class="nav-col">
+  <div class="nav-col col-12 col-lg-8">
 
     <!-- Barra superior fuera del scroll -->
-    <div class="navigator-controls">
-      <h3>{{ 'nav.select' | t: { level: ((currentChildLevel || activeParentInfo?.level) | level) } }}</h3>
+    <div class="navigator-controls d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <h3 class="mb-0">{{ 'nav.select' | t: { level: ((currentChildLevel || activeParentInfo?.level) | level) } }}</h3>
       <button mat-stroked-button color="primary"
               (click)="goBack()" [disabled]="pathStack().length <= 1">
         <mat-icon>arrow_back</mat-icon>
@@ -80,9 +80,9 @@
   </div>
 
   <!-- Columna derecha: seleccionados -->
-  <div class="right-col">
-    <div class="sel-header">
-      <h4>{{ 'nav.selected' | t }}</h4>
+  <div class="right-col col-12 col-lg-4">
+    <div class="sel-header d-flex flex-wrap justify-content-between align-items-baseline gap-2">
+      <h4 class="mb-0">{{ 'nav.selected' | t }}</h4>
       <span class="hint">{{ 'nav.selectedHint' | t }}</span>
     </div>
 

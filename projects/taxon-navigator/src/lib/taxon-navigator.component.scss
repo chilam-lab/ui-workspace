@@ -1,8 +1,8 @@
-/* Layout de dos columnas */
+@import 'bootstrap-subset';
+
+/* Layout de dos columnas (Bootstrap grid: row/col) */
 .navigator-grid {
-  display: grid;
-  grid-template-columns: 1fr 320px; /* izquierda flexible, derecha fija */
-  gap: 16px;
+  align-items: start;
 }
 
 /* Columna izquierda (navegación) */
@@ -160,4 +160,22 @@
   font-size: 12px;
   margin-top: 2px;
   word-break: break-word;
+}
+
+/* ========== RESPONSIVE ========== */
+/* El apilado de columnas lo maneja Bootstrap (col-12 / col-lg-*). */
+.nav-col,
+.right-col {
+  min-width: 0;
+}
+
+.list-scroll,
+.sel-scroll {
+  max-height: min(320px, 45vh);
+}
+
+@media (max-width: 768px) {
+  .sel-label {
+    max-width: 100%;
+  }
 }

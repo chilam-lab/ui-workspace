@@ -7,7 +7,7 @@ import * as L from 'leaflet';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './mapa-malla.component.html',
-  styleUrls: ['./mapa-malla.component.css']
+  styleUrls: ['./mapa-malla.component.scss']
 })
 export class MapaMallaComponent implements AfterViewInit {
   private isBrowser: boolean;

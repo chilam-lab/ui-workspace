@@ -18,7 +18,7 @@ export interface NichoStepDef {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './nicho-stepper.component.html',
-  styleUrls: ['./nicho-stepper.component.css']
+  styleUrls: ['./nicho-stepper.component.scss']
 })
 export class NichoStepperComponent {
   @Input() steps: NichoStepDef[] = [];

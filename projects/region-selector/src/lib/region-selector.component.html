@@ -1,26 +1,26 @@
-<div class="selector-container">
-  <div class="field" *ngIf="sources().length > 1">
-    <label for="source">{{ 'reg.source' | t }}</label>
-    <select id="source" [(ngModel)]="selectedSourceId" (change)="onSourceChange()">
+<div class="selector-container row g-3">
+  <div class="field col-12 col-md-4" *ngIf="sources().length > 1">
+    <label class="form-label" for="source">{{ 'reg.source' | t }}</label>
+    <select id="source" class="form-select" [(ngModel)]="selectedSourceId" (change)="onSourceChange()">
       <option *ngFor="let s of sources()" [value]="s.id_source">
         {{ s.nombre }}
       </option>
     </select>
   </div>
 
-  <div class="field">
-    <label for="region">{{ 'reg.region' | t }}</label>
-    <select id="region" [(ngModel)]="selectedRegionId" (change)="onRegionChange()">
+  <div class="field col-12 col-md-4">
+    <label class="form-label" for="region">{{ 'reg.region' | t }}</label>
+    <select id="region" class="form-select" [(ngModel)]="selectedRegionId" (change)="onRegionChange()">
       <option *ngFor="let region of regions()" [value]="region.id">
         {{ region.name }}
       </option>
     </select>
   </div>
 
-  <div class="field">
-    <label for="resolution">{{ 'reg.resolution' | t }}</label>
+  <div class="field col-12 col-md-4">
+    <label class="form-label" for="resolution">{{ 'reg.resolution' | t }}</label>
     <!-- El value ahora es el grid_id; mostramos la etiqueta resolution -->
-    <select id="resolution" [(ngModel)]="selectedGridId" (change)="onResolutionChange()">
+    <select id="resolution" class="form-select" [(ngModel)]="selectedGridId" (change)="onResolutionChange()">
       <option *ngFor="let res of resolutions()" [value]="res.grid_id">
         {{ res.resolution }}
       </option>

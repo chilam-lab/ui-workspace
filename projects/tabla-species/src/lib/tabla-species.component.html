@@ -8,14 +8,14 @@
   </div>
 
   <!-- Controles superiores: búsqueda + tamaño de página -->
-  <div class="table-controls">
+  <div class="table-controls d-flex flex-wrap justify-content-between align-items-center gap-2 my-2">
     <!-- Buscador -->
     <input
       type="text"
       [(ngModel)]="searchTerm"
       (ngModelChange)="onSearchChange()"
       [placeholder]="'tabla.search' | t"
-      class="input-busqueda"
+      class="form-control input-busqueda"
       [disabled]="loading"
     />
 
@@ -29,45 +29,48 @@
     </div>
 
     <!-- Selector de registros por página -->
-    <div class="page-size-control">
-      <label>
+    <div class="page-size-control d-flex align-items-center gap-2">
+      <label class="mb-0 text-nowrap">
         {{ 'tabla.pageSize' | t }}
-        <select
-          [(ngModel)]="pageSize"
-          (ngModelChange)="onPageSizeChange($event)"
-          [disabled]="loading">
-          <option *ngFor="let size of pageSizeOptions" [value]="size">
-            {{ size }}
-          </option>
-        </select>
       </label>
+      <select
+        class="form-select"
+        [(ngModel)]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)"
+        [disabled]="loading">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }}
+        </option>
+      </select>
     </div>
   </div>
 
   <!-- Tabla -->
-  <table *ngIf="!loading && paginatedData.length">
-    <thead>
-      <tr>
-        <th *ngFor="let col of columns" (click)="setSort(col)">
-          <span class="th-label">{{ columnInfo[col]?.label ?? col }}</span>
-          <button type="button" class="info-btn" *ngIf="columnInfo[col] as info"
-                  (click)="toggleInfo(col, $event)"
-                  (mouseenter)="showInfo(col, $event)" (mouseleave)="hideInfo()"
-                  (focus)="showInfo(col, $event)" (blur)="hideInfo()"
-                  [attr.aria-label]="'tabla.infoAria' | t: { label: info.label }"
-                  [attr.aria-expanded]="infoPop?.col === col">ⓘ</button>
-          <span *ngIf="sortColumn === col">
-            {{ sortDirection === 'asc' ? '▲' : '▼' }}
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of paginatedData; trackBy: trackByRowIndex">
-        <td *ngFor="let col of columns" [class.col-contexto]="col.startsWith('contexto')">{{ row[col] }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive table-container border rounded" *ngIf="!loading && paginatedData.length">
+    <table class="table table-striped table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col" *ngFor="let col of columns" (click)="setSort(col)">
+            <span class="th-label">{{ columnInfo[col]?.label ?? col }}</span>
+            <button type="button" class="info-btn" *ngIf="columnInfo[col] as info"
+                    (click)="toggleInfo(col, $event)"
+                    (mouseenter)="showInfo(col, $event)" (mouseleave)="hideInfo()"
+                    (focus)="showInfo(col, $event)" (blur)="hideInfo()"
+                    [attr.aria-label]="'tabla.infoAria' | t: { label: info.label }"
+                    [attr.aria-expanded]="infoPop?.col === col">ⓘ</button>
+            <span *ngIf="sortColumn === col">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of paginatedData; trackBy: trackByRowIndex">
+          <td *ngFor="let col of columns" [class.col-contexto]="col.startsWith('contexto')">{{ row[col] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Mensaje cuando no hay resultados -->
   <div *ngIf="!loading && !filteredData.length" class="mensaje-vacio">
@@ -76,16 +79,17 @@
 
   <!-- Paginador inferior -->
   <div
-    class="paginator"
+    class="paginator d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2"
     *ngIf="!loading && filteredData.length"
   >
     <div class="summary">
       {{ 'tabla.showing' | t: { from: pageStartIndex, to: pageEndIndex, total: filteredData.length } }}
     </div>
 
-    <div class="buttons">
+    <div class="buttons d-flex flex-wrap align-items-center gap-2">
       <button
         type="button"
+        class="btn btn-outline-secondary btn-sm"
         (click)="changePage(-1)"
         [disabled]="currentPage === 1">
         {{ 'tabla.prev' | t }}
@@ -97,6 +101,7 @@
 
       <button
         type="button"
+        class="btn btn-outline-secondary btn-sm"
         (click)="changePage(1)"
         [disabled]="currentPage === totalPages">
         {{ 'tabla.next' | t }}

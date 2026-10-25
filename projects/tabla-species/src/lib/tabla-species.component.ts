@@ -10,7 +10,7 @@ import { ExportCell, csvBlob, downloadBlob, printTable, toDelimited, xlsxBlob } 
   selector: 'tabla-species',
   standalone: true,
   templateUrl: './tabla-species.component.html',
-  styleUrls: ['./tabla-species.component.css'],
+  styleUrls: ['./tabla-species.component.scss'],
   imports: [CommonModule, FormsModule, TranslatePipe],
   providers: [TablaSpeciesService]
 })

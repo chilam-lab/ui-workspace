@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* ========== Demo preview shell ========== */
+.preview-sidebar {
+  width: 100%;
+}
+
+.preview-nav {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.preview-main {
+  min-width: 0;
+}
+
+.preview-map {
+  height: 500px;
+}
+
+@media (min-width: 768px) {
+  .preview-sidebar {
+    width: 15rem;
+    border-right: 1px solid var(--bs-border-color);
+    border-bottom: 0 !important;
+  }
+
+  .preview-nav {
+    flex-direction: column;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .preview-map {
+    height: 600px;
+  }
+}

@@ -1,12 +1,14 @@
+@import 'bootstrap-subset';
+
+/* Layout vía Bootstrap (.row / .col-*): apilado en móvil, en fila desde md. */
 .selector-row {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  flex-wrap: wrap;
+  align-items: center;
 }
 
-.field { flex: 1 1 200px; }
-.field.grow { flex: 2 1 500px; }
+.field {
+  display: block;
+  width: 100%;
+}
 
 .option .opt-sub {
   opacity: .8;

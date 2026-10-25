@@ -1,0 +1,100 @@
+// =============================================================================
+// Bootstrap 5.3 subset for scoped standalone-component styles.
+//
+// Imported from each library component via ng-packagr `lib.styleIncludePaths`
+// (see each project's ng-package.json). The compiled CSS is therefore embedded
+// in the component and shipped with it — consumers do NOT need Bootstrap.
+//
+// `_reboot.scss` and `_root.scss` are intentionally skipped: they are global
+// resets / :root rules that Angular's emulated encapsulation would scope away.
+// The CSS custom properties Bootstrap's parts need are re-emitted on :host
+// instead, where they inherit into the component's descendants.
+//
+// Re-theme everything by editing the variables in the block below.
+// =============================================================================
+
+// --- Brand overrides (these cascade through the whole subset) ---
+$primary: #4f46e5;      // indigo-600 to match the demo accent
+$border-radius: 0.5rem;
+$font-family-sans-serif: inherit;
+
+// --- Bootstrap core: variables + mixins only (no CSS output yet) ---
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+
+// --- Curated utility set (keeps generated CSS small) ---
+@import 'bootstrap/scss/utilities';
+
+$utilities: map-get-multiple(
+  $utilities,
+  (
+    'display',
+    'order',
+    'flex',
+    'flex-direction',
+    'flex-grow',
+    'flex-shrink',
+    'flex-wrap',
+    'justify-content',
+    'align-items',
+    'align-self',
+    'gap',
+    'margin',
+    'padding',
+    'text-align',
+    'width',
+    'height',
+    'max-width',
+    'overflow',
+    'position',
+    'border',
+    'border-color',
+    'rounded',
+    'color',
+    'background-color',
+    'text-opacity'
+  )
+);
+
+// --- Components (CSS only — no Bootstrap JS) ---
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/buttons';
+
+// --- Emit the utilities ---
+@import 'bootstrap/scss/utilities/api';
+
+// --- Bootstrap custom properties the parts above read, scoped to :host ---
+:host {
+  --bs-body-color: #{$body-color};
+  --bs-body-color-rgb: #{to-rgb($body-color)};
+  --bs-body-bg: #{$body-bg};
+  --bs-body-bg-rgb: #{to-rgb($body-bg)};
+
+  --bs-emphasis-color: #{$body-color};
+  --bs-secondary-color: #{$body-secondary-color};
+  --bs-secondary-bg: #{$body-secondary-bg};
+  --bs-tertiary-color: #{$body-tertiary-color};
+  --bs-tertiary-bg: #{$body-tertiary-bg};
+
+  --bs-border-color: #{$border-color};
+  --bs-border-color-translucent: #{$border-color-translucent};
+  --bs-border-width: #{$border-width};
+  --bs-border-style: #{$border-style};
+  --bs-border-radius: #{$border-radius};
+
+  --bs-link-color: #{$link-color};
+  --bs-link-color-rgb: #{to-rgb($link-color)};
+  --bs-link-hover-color: #{$link-hover-color};
+  --bs-link-hover-color-rgb: #{to-rgb($link-hover-color)};
+
+  @each $name, $value in $theme-colors {
+    --bs-#{$name}: #{$value};
+    --bs-#{$name}-rgb: #{to-rgb($value)};
+  }
+}

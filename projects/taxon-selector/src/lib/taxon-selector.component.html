@@ -7,9 +7,9 @@
   <mat-tab *ngFor="let s of sources()" [label]="s.nombre"></mat-tab>
 </mat-tab-group>
 
-<div class="selector-row">
+<div class="selector-row row g-3">
   <!-- Nivel -->
-  <mat-form-field appearance="fill" class="field">
+  <mat-form-field appearance="fill" class="field col-12 col-md-4">
     <mat-label>{{ 'sel.level' | t }}</mat-label>
     <mat-select [ngModel]="selectedLevel?.variable_id" (ngModelChange)="onLevelChange($event)">
       <mat-option *ngFor="let level of taxonomicLevels()" [value]="level.variable_id">
@@ -19,7 +19,7 @@
   </mat-form-field>
 
   <!-- Búsqueda -->
-  <mat-form-field appearance="fill" class="field grow">
+  <mat-form-field appearance="fill" class="field grow col-12 col-md-8">
     <mat-label>{{ 'sel.search' | t }}</mat-label>
 
     <input

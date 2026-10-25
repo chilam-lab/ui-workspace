@@ -1,0 +1,14 @@
+@import 'bootstrap-subset';
+
+#map {
+  height: min(400px, 60vh);
+  min-height: 260px;
+  width: 100%;
+}
+
+/* ========== RESPONSIVE (Bootstrap-style breakpoints) ========== */
+@media (max-width: 576px) {
+  #map {
+    height: 55vh;
+  }
+}

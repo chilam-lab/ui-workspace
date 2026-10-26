@@ -1,0 +1,64 @@
+@import 'bootstrap-subset';
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.vd {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.vd-controls {
+  margin-bottom: 0.75rem;
+}
+
+.vd-plot {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.vd-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  text-align: center;
+  color: #4b5563;
+  background: #fff;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.vd-error {
+  color: #b42318;
+}
+
+.vd-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #d1d5db;
+  border-top-color: #00a8e6;
+  border-radius: 50%;
+  animation: vd-spin 0.8s linear infinite;
+}
+
+@keyframes vd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 576px) {
+  .vd-controls {
+    margin-bottom: 0.5rem;
+  }
+}

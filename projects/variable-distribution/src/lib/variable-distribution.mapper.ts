@@ -12,10 +12,6 @@ export interface DistributionMapperOptions {
   formatNumber?: (value: number) => string;
 }
 
-/**
- * Converts the backend payload into the small model the Chart.js wrapper reads.
- * Kept pure so it can be tested without Angular or a browser canvas.
- */
 export function toDistributionChartModel(
   response: VariableSummaryResponse | null | undefined,
   options: DistributionMapperOptions = {}

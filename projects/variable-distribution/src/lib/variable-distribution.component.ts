@@ -43,22 +43,16 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariableDistributionComponent implements OnInit, OnChanges, OnDestroy {
-  /** Dataset identifier already loaded in the DyAna backend session. */
   @Input() datasetIdentifier = '';
 
-  /** Selected variable when the host owns the selection. */
   @Input() variableName: string | null = null;
 
-  /** Metadata for `variableName` when the host owns the selection. */
   @Input() variableInfo: VariableInfo | null = null;
 
-  /** Optional dictionary/context used by hosts that already have it. */
   @Input() variableContext: VariableContext | null = null;
 
-  /** Optional list of variables offered by the built-in selector. */
   @Input() variables: VariableDistributionVariable[] = [];
 
-  /** Initial plot type. Categorical variables always use `bar`. */
   @Input() plotType: VariableDistributionPlotType | null = null;
 
   @Input() histBins = 30;
@@ -66,7 +60,6 @@ export class VariableDistributionComponent implements OnInit, OnChanges, OnDestr
   @Input() height = 320;
   @Input() showControls = true;
 
-  /** Offline fixtures, keyed by plot type. Useful for demos and tests. */
   @Input() mockResponses: Partial<Record<VariableDistributionPlotType, VariableSummaryResponse>> | null = null;
 
   @Output() error = new EventEmitter<string>();
@@ -147,7 +140,6 @@ export class VariableDistributionComponent implements OnInit, OnChanges, OnDestr
     clearTimeout(this.binsTimer);
   }
 
-  /** Load the summary for the current variable using the existing endpoint. */
   load(): void {
     this.request?.unsubscribe();
 

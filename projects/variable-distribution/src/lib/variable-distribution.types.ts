@@ -1,7 +1,5 @@
-/** Plots the legacy Variable Distribution tool can render. */
 export type VariableDistributionPlotType = 'kde' | 'histogram' | 'bar';
 
-/** Variable metadata as returned by Dyanas dictionary/workspace state. */
 export interface VariableInfo {
   variable_type?: string;
   var_alias?: string;
@@ -25,7 +23,6 @@ export interface VariableContextEntry {
 
 export type VariableContext = Record<string, VariableContextEntry>;
 
-/** A variable the component can offer in its optional selector. */
 export interface VariableDistributionVariable {
   name: string;
   label: string;
@@ -67,16 +64,11 @@ export interface VariableSummaryResponse {
   unique_values?: Array<number | string> | null;
 }
 
-/** Normalised model consumed by the Chart.js wrapper. */
 export interface DistributionChartModel {
   kind: 'bar' | 'histogram' | 'kde';
-  /** Bar/histogram labels. Empty for KDE. */
   labels: string[];
-  /** Bar/histogram values. Empty for KDE. */
   values: number[];
-  /** KDE curve points, using a linear x axis. */
   points?: Array<{ x: number; y: number }>;
-  /** KDE sample rug points (optional). */
   samplePoints?: Array<{ x: number; y: number }>;
 }
 

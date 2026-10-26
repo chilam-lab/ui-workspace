@@ -1,6 +1,5 @@
 import { Translations } from 'taxon-shared';
 
-/** Textos de variable-distribution en español, inglés y portugués. */
 export const VARIABLE_DISTRIBUTION_I18N: Translations = {
   es: {
     'vardist.title': 'Distribución de variable',

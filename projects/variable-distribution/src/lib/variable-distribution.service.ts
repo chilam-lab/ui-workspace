@@ -5,12 +5,6 @@ import { Observable } from 'rxjs';
 import { DYANA_API_BASE_URL } from './tokens/dyana-api-base-url.token';
 import { VariableSummaryRequest, VariableSummaryResponse } from './variable-distribution.types';
 
-/**
- * Thin HTTP adapter for the existing DyAna endpoint.
- *
- * The backend is intentionally untouched: this is the same request the legacy
- * `tool-variable-distribution.js` sends through `services.getVariableSummary`.
- */
 @Injectable({ providedIn: 'root' })
 export class VariableDistributionService {
   private readonly http = inject(HttpClient);

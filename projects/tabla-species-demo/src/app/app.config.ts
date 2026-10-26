@@ -3,6 +3,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient } from '@angular/common/http'; // 👈 agregar esta línea
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { API_BASE_URL } from 'taxon-shared';
+import { DYANA_API_BASE_URL } from 'variable-distribution';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,6 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(), // 👈 agregar este provider
     provideAnimationsAsync(),
-    { provide: API_BASE_URL, useValue: 'http://localhost:8087' }
+    { provide: API_BASE_URL, useValue: 'http://localhost:8087' },
+    { provide: DYANA_API_BASE_URL, useValue: 'http://localhost:8888/api' }
   ]
 };

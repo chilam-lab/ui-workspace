@@ -43,6 +43,9 @@
       ],
       "taxon-shared": [
         "./dist/taxon-shared"
+      ],
+      "variable-distribution": [
+        "./dist/variable-distribution"
       ]
     },
     "module": "ES2022"

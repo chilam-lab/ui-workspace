@@ -71,11 +71,11 @@
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "900kB",
-                  "maximumError": "1MB"
-                },
+                  {
+                    "type": "initial",
+                    "maximumWarning": "1.5MB",
+                    "maximumError": "2MB"
+                  },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "4kB",
@@ -385,6 +385,39 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/histogram-chart/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "variable-distribution": {
+      "projectType": "library",
+      "root": "projects/variable-distribution",
+      "sourceRoot": "projects/variable-distribution/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/variable-distribution/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/variable-distribution/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/variable-distribution/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/variable-distribution/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

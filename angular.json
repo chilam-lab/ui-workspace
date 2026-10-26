@@ -421,7 +421,52 @@
             "polyfills": [
               "zone.js",
               "zone.js/testing"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles",
+                "node_modules"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "cca-inspector": {
+      "projectType": "library",
+      "root": "projects/cca-inspector",
+      "sourceRoot": "projects/cca-inspector/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/cca-inspector/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/cca-inspector/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/cca-inspector/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/cca-inspector/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles",
+                "node_modules"
+              ]
+            }
           }
         }
       }

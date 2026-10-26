@@ -15,8 +15,10 @@ import type {
   VariableDistributionVariable,
   VariableSummaryResponse,
 } from 'variable-distribution';
+import { CcaInspectorComponent } from 'cca-inspector';
+import type { CcaResults } from 'cca-inspector';
 
-type PreviewKey = 'histogram' | 'vardist' | 'tabla' | 'stepper' | 'taxon' | 'region' | 'maplibre' | 'leaflet';
+type PreviewKey = 'histogram' | 'vardist' | 'cca' | 'tabla' | 'stepper' | 'taxon' | 'region' | 'maplibre' | 'leaflet';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +26,7 @@ type PreviewKey = 'histogram' | 'vardist' | 'tabla' | 'stepper' | 'taxon' | 'reg
   imports: [
     HistogramChartComponent,
     VariableDistributionComponent,
+    CcaInspectorComponent,
     TablaSpeciesComponent,
     NichoStepperComponent,
     TaxonScopeComponent,
@@ -85,6 +88,19 @@ type PreviewKey = 'histogram' | 'vardist' | 'tabla' | 'stepper' | 'taxon' | 'reg
                   [mockResponses]="distributionMocks"
                   [height]="360">
                 </ui-variable-distribution>
+              </div>
+            } @placeholder {
+              <div class="text-muted p-3">Cargando…</div>
+            }
+          }
+
+          @case ('cca') {
+            @defer {
+              <div class="rounded bg-white p-3 shadow-sm border">
+                <ui-cca-inspector
+                  [results]="ccaResults"
+                  [showLinkSelector]="true">
+                </ui-cca-inspector>
               </div>
             } @placeholder {
               <div class="text-muted p-3">Cargando…</div>
@@ -177,6 +193,7 @@ export class AppComponent {
   readonly items: { key: PreviewKey; label: string }[] = [
     { key: 'histogram', label: 'ui-histogram-chart' },
     { key: 'vardist', label: 'ui-variable-distribution' },
+    { key: 'cca', label: 'ui-cca-inspector' },
     { key: 'tabla', label: 'tabla-species' },
     { key: 'stepper', label: 'nicho-stepper' },
     { key: 'taxon', label: 'taxon-selector / navigator' },
@@ -244,6 +261,95 @@ export class AppComponent {
     },
   };
 
+  ccaResults: CcaResults = {
+    links: [
+      {
+        source_group: 'Antropometría',
+        target_group: 'Estilo de vida',
+        primary_correlation: 0.72,
+        n_samples: 4200,
+        source_rank: 8,
+        target_rank: 6,
+        overfit_risk: false,
+        canonical_pairs: [
+          {
+            correlation: 0.72,
+            p_value: 0.0003,
+            permutation_p_value: 0.002,
+            source_variance_explained: 0.34,
+            target_variance_explained: 0.29,
+            source_loadings: {
+              'imc.q2': 0.81,
+              'imc.q1': -0.42,
+              'edad.q3': 0.35,
+            },
+            target_loadings: {
+              'actividad.q1': -0.77,
+              'dieta.q2': 0.66,
+              'tabaco.q1': 0.21,
+            },
+          },
+          {
+            correlation: 0.41,
+            p_value: 0.08,
+            source_variance_explained: 0.18,
+            target_variance_explained: 0.15,
+            source_loadings: {
+              'imc.q3': 0.55,
+              'edad.q1': -0.28,
+            },
+            target_loadings: {
+              'dieta.q1': 0.47,
+              'actividad.q2': -0.22,
+            },
+          },
+        ],
+      },
+      {
+        source_group: 'Antropometría',
+        target_group: 'Metabólico',
+        primary_correlation: 0.64,
+        n_samples: 3100,
+        source_rank: 8,
+        target_rank: 12,
+        overfit_risk: true,
+        canonical_pairs: [
+          {
+            correlation: 0.64,
+            p_value: 0.002,
+            permutation_p_value: 0.01,
+            source_variance_explained: 0.27,
+            target_variance_explained: 0.24,
+            source_loadings: {
+              'imc.q2': 0.74,
+              'edad.q3': 0.31,
+            },
+            target_loadings: {
+              'glucosa.q2': 0.69,
+              'presion.q1': 0.42,
+              'colesterol.q3': -0.33,
+            },
+          },
+        ],
+      },
+    ],
+    encoded_variable_info: {
+      'imc.q1': { original_variable: 'IMC', bin_range: '[18, 24]' },
+      'imc.q2': { original_variable: 'IMC', bin_range: '(24, 29]' },
+      'imc.q3': { original_variable: 'IMC', bin_range: '(29, 35]' },
+      'edad.q1': { original_variable: 'Edad', bin_range: '[18, 30]' },
+      'edad.q3': { original_variable: 'Edad', bin_range: '(40, 50]' },
+      'actividad.q1': { original_variable: 'Actividad física', original_category: 'Baja' },
+      'actividad.q2': { original_variable: 'Actividad física', original_category: 'Alta' },
+      'dieta.q1': { original_variable: 'Dieta', original_category: 'Baja' },
+      'dieta.q2': { original_variable: 'Dieta', original_category: 'Alta' },
+      'tabaco.q1': { original_variable: 'Tabaco', original_category: 'Fuma' },
+      'glucosa.q2': { original_variable: 'Glucosa', bin_range: '(100, 126]' },
+      'presion.q1': { original_variable: 'Presión', bin_range: '[90, 120]' },
+      'colesterol.q3': { original_variable: 'Colesterol', bin_range: '(200, 240]' },
+    },
+  };
+
   mockRows = [
     { id_target: 1, id_covars: 2, metadata_target: { especie: 'Lynx rufus' }, metadata_covars: { especie: 'Pinus ponderosa' }, n: 120, ni: 30, nj: 40, num_nij: 12, epsilon: 0.42, score: 0.78 },
     { id_target: 1, id_covars: 3, metadata_target: { especie: 'Lynx rufus' }, metadata_covars: { especie: 'Quercus rugosa' }, n: 120, ni: 30, nj: 52, num_nij: 9, epsilon: 0.31, score: 0.61 },
@@ -267,7 +373,7 @@ export class AppComponent {
   private initialKey(): PreviewKey {
     if (typeof location === 'undefined') return 'histogram';
     const key = new URLSearchParams(location.search).get('preview');
-    const known: PreviewKey[] = ['histogram', 'vardist', 'tabla', 'stepper', 'taxon', 'region', 'maplibre', 'leaflet'];
+    const known: PreviewKey[] = ['histogram', 'vardist', 'cca', 'tabla', 'stepper', 'taxon', 'region', 'maplibre', 'leaflet'];
     return known.includes(key as PreviewKey) ? (key as PreviewKey) : 'histogram';
   }
 

@@ -17,6 +17,9 @@
     "importHelpers": true,
     "target": "ES2022",
     "paths": {
+      "cca-inspector": [
+        "./dist/cca-inspector"
+      ],
       "histogram-chart": [
         "./dist/histogram-chart"
       ],

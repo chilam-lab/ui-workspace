@@ -17,6 +17,9 @@ Monorepo Angular 19 con un conjunto de componentes reutilizables para visualizac
 - `ui-variable-distribution` (`projects/variable-distribution`): migración Angular del tool “Variable Distribution” de DyAna.
   Usa el endpoint existente `POST /get-variable-summary` sin cambios de backend. Inputs: `datasetIdentifier`, `variableName`, `variableInfo`, `variables` (lista opcional para el selector interno), `plotType` (`kde|histogram|bar`), `histBins`, `showPoints`, `height`, `showControls`. Outputs: `error`, `variableChange`, `plotReady`. La URL del backend se configura con el token `DYANA_API_BASE_URL` (default `/api`). Para demos/tests acepta `mockResponses` por tipo de gráfica.
 
+- `ui-cca-inspector` (`projects/cca-inspector`): migración Angular del inspector de CCA de DyAna.
+  Es una vista de resultados pura: no llama al backend. Inputs: `results` (respuesta CCA completa), `selectedLink` (relación seleccionada), `encodedInfo` (metadatos de columnas; por defecto toma `results.encoded_variable_info`), `showLinkSelector` y `downloadFileName`. Muestra los pares canónicos, la significancia (permutación/Bartlett), las cargas ordenadas por magnitud y la varianza explicada, y descarga la relación actual o todos los resultados en JSON/CSV. Output: `linkChange`.
+
 - `app-mapa-maplibre` (`projects/mapa-maplibre`): visor MapLibre para mallas GeoJSON, ocurrencias y scores.  
   Inputs: `gridId` (malla a cargar), `run` (trigger de actualización), `query` (payload para análisis), `occValues[{cell_id,occ}]`, `legendBreaks`/`legendColors` (leyenda personalizada), flags `showLayerControl`, `controlBaseLayer`, `controlScoreLayer`, y `loading` para overlay. Evento: `epsScrRelReady` (datos listos para tabla). Redibuja la malla al cambiar `gridId`/`run` y aplica ocurrencias/score cuando la fuente está lista.
 
@@ -62,6 +65,7 @@ import { TablaSpeciesComponent } from 'tabla-species';
 import { TaxonSelectorComponent } from 'taxon-selector';
 import { TaxonNavigatorComponent } from 'taxon-navigator';
 import { VariableDistributionComponent } from 'variable-distribution';
+import { CcaInspectorComponent } from 'cca-inspector';
 ```
 
 Dependencias a considerar:
@@ -112,6 +116,18 @@ providers: [
   { provide: DYANA_API_BASE_URL, useValue: 'http://localhost:8888/api' }
 ]
 ```
+
+- `ui-cca-inspector` con resultados CCA:
+
+```html
+<ui-cca-inspector
+  [results]="ccaResults"
+  [selectedLink]="selectedCcaLink"
+  [showLinkSelector]="true">
+</ui-cca-inspector>
+```
+
+No requiere `HttpClient` ni `DYANA_API_BASE_URL`: el host entrega los resultados ya calculados.
 
 - `app-mapa-maplibre` con leyenda y ocurrencias:
 

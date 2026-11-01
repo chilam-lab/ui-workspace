@@ -470,6 +470,45 @@
           }
         }
       }
+    },
+    "state-inspector": {
+      "projectType": "library",
+      "root": "projects/state-inspector",
+      "sourceRoot": "projects/state-inspector/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/state-inspector/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/state-inspector/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/state-inspector/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/state-inspector/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "styles",
+                "node_modules"
+              ]
+            }
+          }
+        }
+      }
     }
   }
 }

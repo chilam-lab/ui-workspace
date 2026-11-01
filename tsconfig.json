@@ -20,6 +20,9 @@
       "cca-inspector": [
         "./dist/cca-inspector"
       ],
+      "state-inspector": [
+        "./dist/state-inspector"
+      ],
       "histogram-chart": [
         "./dist/histogram-chart"
       ],

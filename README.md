@@ -20,6 +20,9 @@ Monorepo Angular 19 con un conjunto de componentes reutilizables para visualizac
 - `ui-cca-inspector` (`projects/cca-inspector`): migración Angular del inspector de CCA de DyAna.
   Es una vista de resultados pura: no llama al backend. Inputs: `results` (respuesta CCA completa), `selectedLink` (relación seleccionada), `encodedInfo` (metadatos de columnas; por defecto toma `results.encoded_variable_info`), `showLinkSelector` y `downloadFileName`. Muestra los pares canónicos, la significancia (permutación/Bartlett), las cargas ordenadas por magnitud y la varianza explicada, y descarga la relación actual o todos los resultados en JSON/CSV. Output: `linkChange`.
 
+- `ui-state-inspector` (`projects/state-inspector`): migración Angular del inspector de estado de DyAna.
+  Es una utilidad de desarrollo pura: no llama al backend. Inputs: `state` (snapshot arbitrario), `events` (registro opcional de eventos), `maxDepth`, `maxChildren`, `maxStringLength`, `maxHeight`, `includeWindow` (default `false`; activa el árbol de `window`), `windowMaxDepth` y `downloadFileName`. Muestra un árbol expandible con tipos, referencias circulares y límites de profundidad, un registro de eventos, y permite copiar/descargar el estado en JSON o importar un JSON. Outputs: `stateImport` (payload importado para que el host lo aplique) y `eventsCleared`.
+
 - `app-mapa-maplibre` (`projects/mapa-maplibre`): visor MapLibre para mallas GeoJSON, ocurrencias y scores.  
   Inputs: `gridId` (malla a cargar), `run` (trigger de actualización), `query` (payload para análisis), `occValues[{cell_id,occ}]`, `legendBreaks`/`legendColors` (leyenda personalizada), flags `showLayerControl`, `controlBaseLayer`, `controlScoreLayer`, y `loading` para overlay. Evento: `epsScrRelReady` (datos listos para tabla). Redibuja la malla al cambiar `gridId`/`run` y aplica ocurrencias/score cuando la fuente está lista.
 
@@ -66,6 +69,8 @@ import { TaxonSelectorComponent } from 'taxon-selector';
 import { TaxonNavigatorComponent } from 'taxon-navigator';
 import { VariableDistributionComponent } from 'variable-distribution';
 import { CcaInspectorComponent } from 'cca-inspector';
+import { StateInspectorComponent } from 'state-inspector';
+import type { StateInspectorImport } from 'state-inspector';
 ```
 
 Dependencias a considerar:
@@ -128,6 +133,25 @@ providers: [
 ```
 
 No requiere `HttpClient` ni `DYANA_API_BASE_URL`: el host entrega los resultados ya calculados.
+
+- `ui-state-inspector` con estado y eventos del host:
+
+```html
+<ui-state-inspector
+  [state]="workspaceState"
+  [events]="eventLog"
+  [maxHeight]="420"
+  (stateImport)="onImportedState($event)"
+  (eventsCleared)="eventLog = []">
+</ui-state-inspector>
+```
+
+```ts
+onImportedState(payload: StateInspectorImport): void {
+  // The component does not mutate the host state; apply it explicitly.
+  this.workspaceState = payload.state;
+}
+```
 
 - `app-mapa-maplibre` con leyenda y ocurrencias:
 

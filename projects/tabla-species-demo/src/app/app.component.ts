@@ -17,8 +17,10 @@ import type {
 } from 'variable-distribution';
 import { CcaInspectorComponent } from 'cca-inspector';
 import type { CcaResults } from 'cca-inspector';
+import { StateInspectorComponent } from 'state-inspector';
+import type { StateInspectorEvent } from 'state-inspector';
 
-type PreviewKey = 'histogram' | 'vardist' | 'cca' | 'tabla' | 'stepper' | 'taxon' | 'region' | 'maplibre' | 'leaflet';
+type PreviewKey = 'histogram' | 'vardist' | 'cca' | 'state' | 'tabla' | 'stepper' | 'taxon' | 'region' | 'maplibre' | 'leaflet';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +29,7 @@ type PreviewKey = 'histogram' | 'vardist' | 'cca' | 'tabla' | 'stepper' | 'taxon
     HistogramChartComponent,
     VariableDistributionComponent,
     CcaInspectorComponent,
+    StateInspectorComponent,
     TablaSpeciesComponent,
     NichoStepperComponent,
     TaxonScopeComponent,
@@ -101,6 +104,21 @@ type PreviewKey = 'histogram' | 'vardist' | 'cca' | 'tabla' | 'stepper' | 'taxon
                   [results]="ccaResults"
                   [showLinkSelector]="true">
                 </ui-cca-inspector>
+              </div>
+            } @placeholder {
+              <div class="text-muted p-3">Cargando…</div>
+            }
+          }
+
+          @case ('state') {
+            @defer {
+              <div class="rounded bg-white p-3 shadow-sm border">
+                <ui-state-inspector
+                  [state]="demoState"
+                  [events]="demoEvents"
+                  [maxHeight]="360"
+                  (eventsCleared)="demoEvents = []">
+                </ui-state-inspector>
               </div>
             } @placeholder {
               <div class="text-muted p-3">Cargando…</div>
@@ -194,6 +212,7 @@ export class AppComponent {
     { key: 'histogram', label: 'ui-histogram-chart' },
     { key: 'vardist', label: 'ui-variable-distribution' },
     { key: 'cca', label: 'ui-cca-inspector' },
+    { key: 'state', label: 'ui-state-inspector' },
     { key: 'tabla', label: 'tabla-species' },
     { key: 'stepper', label: 'nicho-stepper' },
     { key: 'taxon', label: 'taxon-selector / navigator' },
@@ -350,6 +369,58 @@ export class AppComponent {
     },
   };
 
+  demoState: Record<string, unknown> = {
+    datasetIdentifier: 'ensanut_2024',
+    metadata: {
+      rows: 50000,
+      columns: 150,
+      loadedAt: '2026-10-25T18:00:00Z',
+    },
+    variableInfo: {
+      edad: {
+        variable_type: 'continuous',
+        var_alias: 'Edad',
+        binning: { method: 'quantiles', params: { n: 5 } },
+      },
+      sexo: {
+        variable_type: 'categorical',
+        var_alias: 'Sexo',
+        values: { options: { '1': 'Masculino', '2': 'Femenino' } },
+      },
+    },
+    selectedVariables: ['edad', 'sexo'],
+    correlationMatrix: {
+      'edad.q1': { 'imc.q1': 0.45 },
+    },
+    naiveBayesResults: [
+      { predictor_variable: 'edad.q1', epsilon_c_x: 0.6 },
+    ],
+    activeFilter: null,
+    flags: {
+      enableCCA: true,
+      enableDimensionalityReduction: false,
+    },
+    lastEvent: undefined,
+  };
+
+  demoEvents: StateInspectorEvent[] = [
+    {
+      name: 'DATASET_LOADED',
+      at: '2026-10-25T18:00:00Z',
+      payload: { datasetIdentifier: 'ensanut_2024', rows: 50000 },
+    },
+    {
+      name: 'VARIABLE_SELECTED',
+      at: '2026-10-25T18:02:11Z',
+      payload: { variable: 'edad', source: 'any' },
+    },
+    {
+      name: 'ANALYSIS_UPDATED',
+      at: '2026-10-25T18:03:42Z',
+      payload: { tool: 'naive-bayes', predictors: 2 },
+    },
+  ];
+
   mockRows = [
     { id_target: 1, id_covars: 2, metadata_target: { especie: 'Lynx rufus' }, metadata_covars: { especie: 'Pinus ponderosa' }, n: 120, ni: 30, nj: 40, num_nij: 12, epsilon: 0.42, score: 0.78 },
     { id_target: 1, id_covars: 3, metadata_target: { especie: 'Lynx rufus' }, metadata_covars: { especie: 'Quercus rugosa' }, n: 120, ni: 30, nj: 52, num_nij: 9, epsilon: 0.31, score: 0.61 },
@@ -373,7 +444,7 @@ export class AppComponent {
   private initialKey(): PreviewKey {
     if (typeof location === 'undefined') return 'histogram';
     const key = new URLSearchParams(location.search).get('preview');
-    const known: PreviewKey[] = ['histogram', 'vardist', 'cca', 'tabla', 'stepper', 'taxon', 'region', 'maplibre', 'leaflet'];
+    const known: PreviewKey[] = ['histogram', 'vardist', 'cca', 'state', 'tabla', 'stepper', 'taxon', 'region', 'maplibre', 'leaflet'];
     return known.includes(key as PreviewKey) ? (key as PreviewKey) : 'histogram';
   }
 

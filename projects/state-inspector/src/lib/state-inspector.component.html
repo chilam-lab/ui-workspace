@@ -1,0 +1,124 @@
+<ng-template #nodeTpl let-node let-depth="depth">
+  <div class="st-node" [style.padding-left.px]="depth * 14">
+    @if (isExpandable(node)) {
+      <button
+        type="button"
+        class="st-toggle"
+        [attr.aria-expanded]="isExpanded(node.path)"
+        [attr.aria-label]="node.key"
+        (click)="toggle(node.path)">
+        {{ isExpanded(node.path) ? '▾' : '▸' }}
+      </button>
+    } @else {
+      <span class="st-toggle is-placeholder" aria-hidden="true"></span>
+    }
+
+    <span class="st-key">{{ node.key }}</span><span class="st-colon">:</span>
+    <span [ngClass]="['st-value', 'st-' + node.kind]">{{ displayValue(node) }}</span>
+
+    @if (noteText(node); as note) {
+      <span class="st-note">{{ note }}</span>
+    }
+  </div>
+
+  @if (isExpandable(node) && isExpanded(node.path)) {
+    @for (child of node.children; track child.path) {
+      <ng-container
+        *ngTemplateOutlet="nodeTpl; context: { $implicit: child, depth: depth + 1 }">
+      </ng-container>
+    }
+  }
+</ng-template>
+
+<section class="st">
+  <header class="st-header d-flex flex-wrap justify-content-between align-items-start gap-2">
+    <h3 class="st-title">{{ titleText() }}</h3>
+
+    <div class="st-actions d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="refresh()">
+        {{ 'state.refresh' | t }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="expandAll()">
+        {{ 'state.expandAll' | t }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="collapseAll()">
+        {{ 'state.collapseAll' | t }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="copyJson()">
+        {{ 'state.copyJson' | t }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="downloadJson()">
+        {{ 'state.downloadJson' | t }}
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="triggerImport()">
+        {{ 'state.importJson' | t }}
+      </button>
+      <input
+        #fileInput
+        type="file"
+        accept="application/json,.json"
+        class="d-none"
+        (change)="onFileSelected($event)" />
+    </div>
+  </header>
+
+  @if (status()) {
+    <p class="st-status" [class.is-error]="statusIsError()" role="status">{{ status() }}</p>
+  }
+
+  <section class="st-section">
+    <h4 class="st-section-title">{{ 'state.appState' | t }}</h4>
+
+    @if (stateTree(); as tree) {
+      <div class="st-tree" [style.max-height.px]="maxHeight">
+        <ng-container
+          *ngTemplateOutlet="nodeTpl; context: { $implicit: tree, depth: 0 }">
+        </ng-container>
+      </div>
+    } @else {
+      <p class="st-empty">{{ 'state.noState' | t }}</p>
+    }
+  </section>
+
+  <section class="st-section">
+    <div class="st-section-head d-flex justify-content-between align-items-center gap-2">
+      <h4 class="st-section-title">{{ 'state.events' | t }}</h4>
+      @if (events.length) {
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="clearEvents()">
+          {{ 'state.clearEvents' | t }}
+        </button>
+      }
+    </div>
+
+    @if (events.length) {
+      <ul class="st-events" [style.max-height.px]="maxHeight">
+        @for (event of events; track $index) {
+          <li class="st-event">
+            <div class="st-event-head">
+              <span class="st-event-name">{{ event.name }}</span>
+              @if (event.at !== undefined) {
+                <span class="st-event-time">{{ eventTime(event.at) }}</span>
+              }
+            </div>
+            @if (event.payload !== undefined) {
+              <pre class="st-event-payload">{{ eventPayload(event.payload) }}</pre>
+            }
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="st-empty">{{ 'state.noEvents' | t }}</p>
+    }
+  </section>
+
+  @if (includeWindow && windowTree(); as winTree) {
+    <section class="st-section">
+      <h4 class="st-section-title">{{ 'state.window' | t }}</h4>
+      <div class="st-tree" [style.max-height.px]="maxHeight">
+        <ng-container
+          *ngTemplateOutlet="nodeTpl; context: { $implicit: winTree, depth: 0 }">
+        </ng-container>
+      </div>
+    </section>
+  }
+</section>

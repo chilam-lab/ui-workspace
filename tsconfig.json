@@ -17,6 +17,12 @@
     "importHelpers": true,
     "target": "ES2022",
     "paths": {
+      "cca-inspector": [
+        "./dist/cca-inspector"
+      ],
+      "state-inspector": [
+        "./dist/state-inspector"
+      ],
       "histogram-chart": [
         "./dist/histogram-chart"
       ],
@@ -43,6 +49,9 @@
       ],
       "taxon-shared": [
         "./dist/taxon-shared"
+      ],
+      "variable-distribution": [
+        "./dist/variable-distribution"
       ]
     },
     "module": "ES2022"

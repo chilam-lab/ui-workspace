@@ -1,0 +1,129 @@
+<section class="cca">
+  <header class="cca-header d-flex flex-wrap justify-content-between align-items-start gap-2">
+    <h3 class="cca-title">{{ 'cca.title' | t }}</h3>
+
+    <div class="cca-downloads d-flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        [disabled]="!activeLink()"
+        (click)="downloadCurrent('json')">
+        {{ 'cca.downloadCurrentJson' | t }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        [disabled]="!activeLink()"
+        (click)="downloadCurrent('csv')">
+        {{ 'cca.downloadCurrentCsv' | t }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        [disabled]="!hasResults()"
+        (click)="downloadAll('json')">
+        {{ 'cca.downloadAllJson' | t }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        [disabled]="!hasResults()"
+        (click)="downloadAll('csv')">
+        {{ 'cca.downloadAllCsv' | t }}
+      </button>
+    </div>
+  </header>
+
+  @if (downloadStatus()) {
+    <p class="cca-status" role="status">{{ downloadStatus() }}</p>
+  }
+
+  @if (canShowSelector()) {
+    <div class="cca-selector">
+      <label class="form-label">{{ 'cca.selectLink' | t }}</label>
+      <select
+        class="form-select"
+        [attr.aria-label]="'cca.selectLink' | t"
+        [ngModel]="selectorIndex()"
+        (ngModelChange)="selectLink($event)">
+        @for (link of selectorLinks(); track link.source_group + '|' + link.target_group; let i = $index) {
+          <option [value]="i">
+            {{ link.source_group }} ↔ {{ link.target_group }} ({{ link.primary_correlation.toFixed(2) }})
+          </option>
+        }
+      </select>
+    </div>
+  }
+
+  @if (activeLink(); as link) {
+    <h4 class="cca-link-title">{{ link.source_group }} ↔ {{ link.target_group }}</h4>
+
+    @if (link.n_samples) {
+      <p class="cca-context">
+        {{ 'cca.rows' | t: { n: link.n_samples } }}
+        @if (link.source_rank !== null && link.source_rank !== undefined && link.target_rank !== null && link.target_rank !== undefined) {
+          <span> · {{ 'cca.columns' | t: { source: link.source_rank, target: link.target_rank } }}</span>
+        }
+      </p>
+    }
+
+    @if (link.overfit_risk) {
+      <div class="cca-warning" role="note">
+        <strong>⚠ {{ 'cca.overfitTitle' | t }}</strong>
+        {{ 'cca.overfitBody' | t }}
+      </div>
+    }
+
+    <div class="cca-pairs">
+      @for (pair of link.canonical_pairs; track $index; let i = $index) {
+        <div class="cca-pair">
+          <button
+            type="button"
+            class="cca-pair-header"
+            [style.background-color]="pairColor(pair.correlation)"
+            [attr.aria-expanded]="isExpanded(i)"
+            [attr.aria-label]="(isExpanded(i) ? 'cca.collapsePair' : 'cca.expandPair') | t: { n: i + 1 }"
+            (click)="togglePair(i)">
+            <span class="cca-arrow" [class.is-open]="isExpanded(i)">▶</span>
+            <span class="cca-pair-label">
+              {{ 'cca.canonicalPair' | t: { n: i + 1 } }}
+              <span class="cca-sep">|</span>
+              {{ 'cca.correlation' | t: { value: pair.correlation.toFixed(4) } }}
+
+              @if (significance(pair); as sig) {
+                <span class="cca-sep">|</span>
+                <span class="cca-significance" [class.is-weak]="sig.weak">
+                  {{ (sig.kind === 'permutation' ? 'cca.permutationP' : 'cca.pValue') | t }} = {{ sig.display }}
+                  @if (sig.weak) {
+                    <span class="cca-weak-note">— {{ 'cca.notDistinguishable' | t }}</span>
+                  }
+                </span>
+              }
+            </span>
+          </button>
+
+          @if (isExpanded(i)) {
+            <div class="cca-pair-details">
+              <div class="cca-loadings-grid">
+                <ui-cca-loadings
+                  [title]="sourceTitle(link)"
+                  [varianceLabel]="varianceLabel(pair.source_variance_explained)"
+                  [items]="sourceLoadings(pair)"
+                  [emptyText]="'cca.noLoadings' | t" />
+                <ui-cca-loadings
+                  [title]="targetTitle(link)"
+                  [varianceLabel]="varianceLabel(pair.target_variance_explained)"
+                  [items]="targetLoadings(pair)"
+                  [emptyText]="'cca.noLoadings' | t" />
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else if (!hasResults()) {
+    <p class="cca-empty">{{ 'cca.noResults' | t }}</p>
+  } @else {
+    <p class="cca-empty">{{ 'cca.empty' | t }}</p>
+  }
+</section>

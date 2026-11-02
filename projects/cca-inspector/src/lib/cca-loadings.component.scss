@@ -1,0 +1,94 @@
+@import 'bootstrap-subset';
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.cca-loadings {
+  min-width: 0;
+}
+
+.cca-loadings-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+  text-align: center;
+}
+
+.cca-variance {
+  font-weight: 400;
+  opacity: 0.7;
+  font-size: 0.7rem;
+}
+
+.cca-loading-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  min-width: 0;
+}
+
+.cca-loading-label {
+  width: 150px;
+  flex: 0 0 150px;
+  padding-right: 0.3rem;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cca-loading-track {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-left: 0.3rem;
+  border-left: 1px solid #cbd5e1;
+}
+
+.cca-loading-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 14px;
+  min-width: 2px;
+  padding: 0 0.3rem;
+  color: #fff;
+  background: #1f77b4;
+  border-radius: 0 2px 2px 0;
+}
+
+.cca-loading-bar.is-negative {
+  background: #ff7f0e;
+  justify-content: flex-start;
+}
+
+.cca-loading-value {
+  font-weight: 500;
+  line-height: 1;
+}
+
+.cca-loading-value-outside {
+  margin-left: 0.35rem;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.cca-loadings-empty {
+  margin: 0;
+  font-size: 0.7rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+@media (max-width: 576px) {
+  .cca-loading-label {
+    width: 110px;
+    flex-basis: 110px;
+  }
+}

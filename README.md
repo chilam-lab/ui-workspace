@@ -14,6 +14,15 @@ Monorepo Angular 19 con un conjunto de componentes reutilizables para visualizac
 - `ui-histogram-chart` (`projects/histogram-chart`): histograma con Chart.js.  
   Inputs clave: `endpoint` (`frequency`, `deciles`), `metric` (`epsilon|score`), `uuid`, `numBuckets`, etiquetas (`title`, `xLabel`, `yLabel`), `height`. Modo custom: `useCustomData` + `customData[{label,value}]` para dibujar sin llamar API. Evento: `barSelected` con `{ index, min, max }` al clicar una barra. Muestra % de frecuencia o valores absolutos según el modo.
 
+- `ui-variable-distribution` (`projects/variable-distribution`): migración Angular del tool “Variable Distribution” de DyAna.
+  Usa el endpoint existente `POST /get-variable-summary` sin cambios de backend. Inputs: `datasetIdentifier`, `variableName`, `variableInfo`, `variables` (lista opcional para el selector interno), `plotType` (`kde|histogram|bar`), `histBins`, `showPoints`, `height`, `showControls`. Outputs: `error`, `variableChange`, `plotReady`. La URL del backend se configura con el token `DYANA_API_BASE_URL` (default `/api`). Para demos/tests acepta `mockResponses` por tipo de gráfica.
+
+- `ui-cca-inspector` (`projects/cca-inspector`): migración Angular del inspector de CCA de DyAna.
+  Es una vista de resultados pura: no llama al backend. Inputs: `results` (respuesta CCA completa), `selectedLink` (relación seleccionada), `encodedInfo` (metadatos de columnas; por defecto toma `results.encoded_variable_info`), `showLinkSelector` y `downloadFileName`. Muestra los pares canónicos, la significancia (permutación/Bartlett), las cargas ordenadas por magnitud y la varianza explicada, y descarga la relación actual o todos los resultados en JSON/CSV. Output: `linkChange`.
+
+- `ui-state-inspector` (`projects/state-inspector`): migración Angular del inspector de estado de DyAna.
+  Es una utilidad de desarrollo pura: no llama al backend. Inputs: `state` (snapshot arbitrario), `events` (registro opcional de eventos), `maxDepth`, `maxChildren`, `maxStringLength`, `maxHeight`, `includeWindow` (default `false`; activa el árbol de `window`), `windowMaxDepth` y `downloadFileName`. Muestra un árbol expandible con tipos, referencias circulares y límites de profundidad, un registro de eventos, y permite copiar/descargar el estado en JSON o importar un JSON. Outputs: `stateImport` (payload importado para que el host lo aplique) y `eventsCleared`.
+
 - `app-mapa-maplibre` (`projects/mapa-maplibre`): visor MapLibre para mallas GeoJSON, ocurrencias y scores.  
   Inputs: `gridId` (malla a cargar), `run` (trigger de actualización), `query` (payload para análisis), `occValues[{cell_id,occ}]`, `legendBreaks`/`legendColors` (leyenda personalizada), flags `showLayerControl`, `controlBaseLayer`, `controlScoreLayer`, y `loading` para overlay. Evento: `epsScrRelReady` (datos listos para tabla). Redibuja la malla al cambiar `gridId`/`run` y aplica ocurrencias/score cuando la fuente está lista.
 
@@ -50,18 +59,26 @@ import { HistogramChartComponent } from 'histogram-chart';
 export class MyHostComponent { uuid = 'abc-123'; }
 ```
 
-Aplica el mismo patrón para los demás paquetes:  
-`import { MapaMaplibreComponent } from 'mapa-maplibre';`  
-`import { RegionSelectorComponent } from 'region-selector';`  
-`import { TablaSpeciesComponent } from 'tabla-species';`  
-`import { TaxonSelectorComponent } from 'taxon-selector';`  
-`import { TaxonNavigatorComponent } from 'taxon-navigator';`
+Aplica el mismo patrón para los demás paquetes:
+
+```ts
+import { MapaMaplibreComponent } from 'mapa-maplibre';
+import { RegionSelectorComponent } from 'region-selector';
+import { TablaSpeciesComponent } from 'tabla-species';
+import { TaxonSelectorComponent } from 'taxon-selector';
+import { TaxonNavigatorComponent } from 'taxon-navigator';
+import { VariableDistributionComponent } from 'variable-distribution';
+import { CcaInspectorComponent } from 'cca-inspector';
+import { StateInspectorComponent } from 'state-inspector';
+import type { StateInspectorImport } from 'state-inspector';
+```
 
 Dependencias a considerar:
 - Habilita `HttpClientModule` en tu app (todos los servicios usan HTTP).
 - `mapa-maplibre` requiere agregar `node_modules/maplibre-gl/dist/maplibre-gl.css` en `angular.json` o en tu `styles.css`.
 - `taxon-selector` usa Angular Material; asegúrate de tener tema/material instalado.
 - Los servicios apuntan por defecto a `http://localhost:8087`; ajusta baseUrl si tu backend es otro.
+- `variable-distribution` apunta al backend DyAna mediante `DYANA_API_BASE_URL` (default `/api`). No requiere cambios en `DyAna/back/`; solo necesita un `dataset_identifier` ya cargado en la sesión del backend. La autenticación es responsabilidad del host: agrega un `HttpInterceptor` si el endpoint la requiere.
 
 ## Ejemplos rápidos
 
@@ -86,6 +103,54 @@ Dependencias a considerar:
   [title]="'Deciles promedio score'"
   [yLabel]="'Score promedio'">
 </ui-histogram-chart>
+```
+
+- `ui-variable-distribution` (con selector interno y datos mock):
+
+```html
+<ui-variable-distribution
+  datasetIdentifier="ensanut_2024"
+  [variables]="variables"
+  [height]="360">
+</ui-variable-distribution>
+```
+
+```ts
+providers: [
+  provideHttpClient(),
+  { provide: DYANA_API_BASE_URL, useValue: 'http://localhost:8888/api' }
+]
+```
+
+- `ui-cca-inspector` con resultados CCA:
+
+```html
+<ui-cca-inspector
+  [results]="ccaResults"
+  [selectedLink]="selectedCcaLink"
+  [showLinkSelector]="true">
+</ui-cca-inspector>
+```
+
+No requiere `HttpClient` ni `DYANA_API_BASE_URL`: el host entrega los resultados ya calculados.
+
+- `ui-state-inspector` con estado y eventos del host:
+
+```html
+<ui-state-inspector
+  [state]="workspaceState"
+  [events]="eventLog"
+  [maxHeight]="420"
+  (stateImport)="onImportedState($event)"
+  (eventsCleared)="eventLog = []">
+</ui-state-inspector>
+```
+
+```ts
+onImportedState(payload: StateInspectorImport): void {
+  // The component does not mutate the host state; apply it explicitly.
+  this.workspaceState = payload.state;
+}
 ```
 
 - `app-mapa-maplibre` con leyenda y ocurrencias:

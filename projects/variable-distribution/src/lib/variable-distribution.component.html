@@ -1,0 +1,86 @@
+<section class="vd" [attr.aria-busy]="loading() ? 'true' : 'false'">
+  @if (showControls) {
+    <div class="vd-controls row g-2 align-items-end">
+      @if (activeVariables().length > 1) {
+        <div class="col-12 col-md-4">
+          <label class="form-label">{{ 'vardist.variable' | t }}</label>
+          <select
+            class="form-select"
+            [attr.aria-label]="'vardist.variable' | t"
+            [ngModel]="selectedVariable()"
+            (ngModelChange)="onVariableSelect($event)">
+            @for (item of activeVariables(); track item.name) {
+              <option [value]="item.name">{{ item.label }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      @if (canChoosePlotType()) {
+        <div class="col-12 col-md-3">
+          <label class="form-label">{{ 'vardist.plotType' | t }}</label>
+          <select
+            class="form-select"
+            [attr.aria-label]="'vardist.plotType' | t"
+            [ngModel]="selectedPlotType()"
+            (ngModelChange)="onPlotTypeSelect($event)">
+            <option value="kde">{{ 'vardist.kde' | t }}</option>
+            <option value="histogram">{{ 'vardist.histogram' | t }}</option>
+          </select>
+        </div>
+
+        @if (showBins()) {
+          <div class="col-12 col-md-3">
+            <label class="form-label">{{ 'vardist.bins' | t }}: {{ bins() }}</label>
+            <input
+              type="range"
+              class="form-range"
+              min="5"
+              max="100"
+              step="1"
+              [attr.aria-label]="'vardist.bins' | t"
+              [ngModel]="bins()"
+              (ngModelChange)="onBinsChange($event)" />
+          </div>
+        }
+
+        @if (showPointsOption()) {
+          <div class="col-12 col-md-3">
+            <label class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [ngModel]="pointsVisible()"
+                (ngModelChange)="onPointsToggle($event)" />
+              <span class="form-check-label">{{ 'vardist.showPoints' | t }}</span>
+            </label>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <div class="vd-plot" [style.height.px]="height">
+    @if (loading()) {
+      <div class="vd-state">
+        <div class="vd-spinner" role="status"></div>
+        <span>{{ 'vardist.loading' | t }}</span>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="vd-state vd-error">
+        <span>{{ errorMessage() }}</span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="load()">
+          {{ 'vardist.retry' | t }}
+        </button>
+      </div>
+    } @else if (chartModel()) {
+      <ui-variable-distribution-chart
+        [model]="chartModel()"
+        [xLabel]="currentLabel()"
+        [yLabel]="yAxisLabel()"
+        [ariaLabel]="'vardist.chartAria' | t: { variable: currentLabel() }" />
+    } @else {
+      <div class="vd-state">{{ 'vardist.empty' | t }}</div>
+    }
+  </div>
+</section>
